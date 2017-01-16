@@ -52,7 +52,7 @@
                     echo '<li class="list-group-item list-group-item-danger">'.$timestart.' - '.$timeend.' Uhr <span class="glyphicon glyphicon-arrow-right"></span>&nbsp <b>Belegt</b></li>';
                 }else{
                     echo '<li class="list-group-item list-group-item-success">'.$timestart.' - '.$timeend.' Uhr <span class="glyphicon glyphicon-arrow-right"></span>&nbsp <b>Frei</B> <span class="glyphicon glyphicon-arrow-right"></span> ';
-                    echo '&nbsp<div id="selectinfo"></div><button id="select" type="button" class="btn btn-success" name="'.$id.'"><span class="glyphicon glyphicon-plus-sign"></span> Auswählen</button>';
+                    echo '&nbsp<span id="selectinfo'.$id.'"></span><button id="select'.$id.'" type="button" class="btn btn-success" name="'.$id.'" onclick="toggle(\''.$id.'\')"><span class="glyphicon glyphicon-plus-sign"></span> Auswählen</button>';
                     echo '</li>';
                 }
 
