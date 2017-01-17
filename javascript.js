@@ -5,12 +5,12 @@ function toggle(id){
         document.getElementById('selectinfo'+id).innerHTML=text;
         document.getElementById('select'+id).innerHTML='<span class="glyphicon glyphicon-minus-sign"></span> Auswahl aufheben';
         document.getElementById('select'+id).setAttribute("class","btn btn-danger");
-
+        document.getElementById('input'+id).setAttribute("value","1");
     }else{
         document.getElementById('selectinfo'+id).innerHTML="";
         document.getElementById('select'+id).innerHTML='<span class="glyphicon glyphicon-plus-sign"></span> Auswählen';
         document.getElementById('select'+id).setAttribute("class","btn btn-success");
-
+        document.getElementById('input'+id).setAttribute("value","0");
     }
 
 }
