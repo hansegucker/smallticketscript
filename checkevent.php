@@ -28,7 +28,7 @@ include("config.inc.php")
       </div>
       <div class="alert alert-info" role="alert"><b>HINWEIS:</b> Bitte überprüfen sie ihre Reservierung, falls sie Fehler entdecken sollten, drücken sie bitte auf "ZURÜCK", sonst auf "WEITER"</div>
 
-      <form action="dateneingabe.php" method="post">
+      <form action="datainput.php" method="post">
       <?php
         include("zugriff.inc.php");
         if(isset($_POST['ticketsselected'])){
