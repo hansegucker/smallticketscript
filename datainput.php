@@ -112,7 +112,7 @@ include("zugriff.inc.php");
   <div class="panel-body">
 
           <?php
-//Datacheck
+            //Datacheck
                 function check_email($email){
                      if(preg_match('/^[^\x00-\x20()<>@,;:\\".[\]\x7f-\xff]+(?:\.[^\x00-\x20()<>@,;:\\".[\]\x7f-\xff]+)*\@[^\x00-\x20()<>@,;:\\".[\]\x7f-\xff]+(?:\.[^\x00-\x20()<>@,;:\\".[\]\x7f-\xff]+)+$/i', $email)) {
                         return true;
@@ -135,6 +135,14 @@ include("zugriff.inc.php");
             }
         }else{
             $status=$status."Bitte geben sie eine E-Mail-Adresse ein!<br>";
+        }
+
+
+
+        if(!empty($_POST["name"])){
+            $wert=0;
+        }else{
+            $status=$status."Bitte geben sie einen Vor- und einen Nachnamen ein!";
         }
 
         if($status==""){
