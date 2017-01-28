@@ -31,13 +31,14 @@ include("zugriff.inc.php");
           <h1>Daten eingeben</h1>
       </div>
 
-      <form action="dateneingabe.php" method="post">
+      <form action="datainput.php" method="post">
 
 <div class="panel panel-default">
   <div class="panel-heading">
     <h3 class="panel-title">E-Mail</h3>
   </div>
   <div class="panel-body">
+      <div class="alert alert-info" role="alert">An diese E-Mail-Adresse wird ihre Reservierungsbestätigung geschickt, die sie am Einlass benötigen!</div>
       <div class="input-group">
         <span class="input-group-addon" id="einfaches-addon1"><span class="glyphicon glyphicon-envelope"></span></span>
         <input type="text" class="form-control" placeholder="E-Mail*" aria-describedby="einfaches-addon1" name="email">
@@ -53,6 +54,7 @@ include("zugriff.inc.php");
     <h3 class="panel-title">Kontaktdaten</h3>
   </div>
   <div class="panel-body">
+      <div class="alert alert-info" role="alert">Bitte bringen sie zu ihrem Besuch einen gültigen Personalausweis mit, um ihre in der Buchung angegebene Indentität zu verifizieren.</div>
       <div class="input-group">
         <span class="input-group-addon" id="einfaches-addon1"><span class="glyphicon glyphicon-user"></span></span>
         <input type="text" class="form-control" placeholder="Vor- und Nachname*" aria-describedby="einfaches-addon1" name="name">
@@ -77,17 +79,30 @@ include("zugriff.inc.php");
 </div>
 <div class="panel panel-default">
   <div class="panel-heading">
-    <h3 class="panel-title">Überprüfung</h3>
+    <h3 class="panel-title">Überprüfung der Reservierung</h3>
   </div>
   <div class="panel-body">
-      <div class="input-group">
-        <span class="input-group-addon" id="einfaches-addon1"><span class="glyphicon glyphicon-envelope"></span></span>
-        <input type="text" class="form-control" placeholder="E-Mail*" aria-describedby="einfaches-addon1">
-      </div>
-      <div class="input-group">
-        <span class="input-group-addon" id="einfaches-addon1"><span class="glyphicon glyphicon-envelope"></span></span>
-        <input type="text" class="form-control" placeholder="E-Mail wiederholen*" aria-describedby="einfaches-addon1">
-      </div>
+      Sie wollen für folgende Zeiten reservieren:<br><br>
+      <?php
+      $sqltemp="SELECT * FROM `times`";
+      $resulttemp=mysqli_query($db,$sqltemp);
+
+      while($row=mysqli_fetch_assoc($resulttemp)){
+          $id=$row['id'];
+          if(!empty($_SESSION["booked".$id])){
+              $timestart=$row['timestart'];
+              $timeend=$row['timeend'];
+              $booked=intval($row['booked']);
+              $sqltemp2="SELECT * FROM `dates` WHERE `id`=".$row["date"];
+              $resulttemp2=mysqli_query($db,$sqltemp2);
+              while($row=mysqli_fetch_assoc($resulttemp2)){
+                  $datum=$row['datum'];
+                  $wochentag=$row['wochentag'];
+              }
+              echo "<li class='list-group-item'>".$wochentag.", den ".$datum." von ".$timestart." bis ".$timeend." Uhr</li>";
+          }
+      }
+      ?>
   </div>
 </div>
 <div class="panel panel-default">
@@ -95,17 +110,43 @@ include("zugriff.inc.php");
     <h3 class="panel-title">Abschluss</h3>
   </div>
   <div class="panel-body">
-      <label>
+
           <?php
 //Datacheck
-                // function check_email($email){
-                //     if(preg_match('/^[^\x00-\x20()<>@,;:\\".[\]\x7f-\xff]+(?:\.[^\x00-\x20()<>@,;:\\".[\]\x7f-\xff]+)*\@[^\x00-\x20()<>@,;:\\".[\]\x7f-\xff]+(?:\.[^\x00-\x20()<>@,;:\\".[\]\x7f-\xff]+)+$/i', $email) return true;
-                //
-                //     return false;
-                //     }
+                function check_email($email){
+                     if(preg_match('/^[^\x00-\x20()<>@,;:\\".[\]\x7f-\xff]+(?:\.[^\x00-\x20()<>@,;:\\".[\]\x7f-\xff]+)*\@[^\x00-\x20()<>@,;:\\".[\]\x7f-\xff]+(?:\.[^\x00-\x20()<>@,;:\\".[\]\x7f-\xff]+)+$/i', $email)) {
+                        return true;
+                     }
+                     return false;
+                 }
+        $status="";
+        if(!empty($_POST['email'])){
+            if(!check_email($_POST['email'])){
+                $status=$status."Bitte geben sie eine <b>gültige</b> E-Mail-Adresse ein!<br>";
+            }
+            if(empty($_POST['emailagain'])){
+                $status=$status."Bitte wiederholen sie die E-Mail-Adresse!<br>";
+            }else{
+                if($_POST["email"]!=$_POST["emailagain"]){
+                    $status=$status."Die E-Mail-Adressen stimmen nicht überein!<br>";
+                }else{
+                    $_SESSION["email"]=$_POST["email"];
+                }
+            }
+        }else{
+            $status=$status."Bitte geben sie eine E-Mail-Adresse ein!<br>";
+        }
+
+        if($status==""){
+            echo '<div class="alert alert-success" role="alert">Super! Alle Eingaben sind vorhanden und korrekt!</div>';
+        }else{
+            echo '<div class="alert alert-danger" role="alert">'.$status.'</div>';
+        }
+
 
 
            ?>
+           <label>
       <input type="checkbox" name="agb" value="yes">
       Hiermit erkläre ich mich mit den Datenschutzbedingungen einverstanden!
   </label><br>
