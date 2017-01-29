@@ -140,7 +140,11 @@ include("zugriff.inc.php");
 
 
         if(!empty($_POST["name"])){
-            $wert=0;
+            if(str_word_count($_POST["name"])<2){
+                $status=$status."Haben sie vielleicht den Vor- oder den Nachnamen vergessen?";
+            }else{
+                $_SESSION['name']=$_POST['name'];
+            }
         }else{
             $status=$status."Bitte geben sie einen Vor- und einen Nachnamen ein!";
         }
